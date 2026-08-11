@@ -86,6 +86,6 @@ const theme = 'dark';
     )}
 
     <!-- Giscus Comments (client:load = React island, only this page) -->
-    <GiscusComments theme={theme} client:load />
+    <GiscusComments theme={theme} lang={lang === 'zh' ? 'zh-CN' : 'en'} client:load />
   </article>
 </BaseLayout>

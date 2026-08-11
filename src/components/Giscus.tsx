@@ -3,9 +3,10 @@ import GiscusReact from '@giscus/react';
 
 interface Props {
   theme: 'dark' | 'light';
+  lang?: string;
 }
 
-export default function GiscusComments({ theme }: Props) {
+export default function GiscusComments({ theme, lang = 'zh-CN' }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Two-phase theme sync: onLoad + MutationObserver
@@ -34,7 +35,7 @@ export default function GiscusComments({ theme }: Props) {
       <GiscusReact
         repo="zhao249/zhao249.github.io"
         repoId={import.meta.env.PUBLIC_GISCUS_REPO_ID ?? ''}
-        category="Announcements"
+        category="General"
         categoryId={import.meta.env.PUBLIC_GISCUS_CATEGORY_ID ?? ''}
         mapping="pathname"
         strict="0"
