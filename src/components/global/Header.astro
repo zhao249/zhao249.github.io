@@ -1,0 +1,224 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+import { getLocalizedPath } from '../../utils/i18n';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+
+const t = UI[lang];
+const oppositeLang: Lang = lang === 'zh' ? 'en' : 'zh';
+const targetPath = getLocalizedPath(currentPath, oppositeLang);
+const isHome = currentPath === '/' || currentPath === '/en' || currentPath === '/en/';
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-theme bg-base-80 backdrop-blur-md"
+  id="site-header"
+>
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+    <!-- Logo -->
+    <a
+      href={lang === 'zh' ? '/' : '/en/'}
+      class="text-lg font-bold text-primary hover:opacity-80 transition-opacity"
+    >
+      ZHAO
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden items-center gap-1 sm:flex" aria-label="Main navigation">
+      <a
+        href={lang === 'zh' ? '/works/' : '/en/works/'}
+        class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+      >
+        {t.nav.works}
+      </a>
+      <a
+        href={lang === 'zh' ? '/blog/' : '/en/blog/'}
+        class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+      >
+        {t.nav.blog}
+      </a>
+      <a
+        href={lang === 'zh' ? '/milestones/' : '/en/milestones/'}
+        class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+      >
+        {t.nav.milestones}
+      </a>
+    </nav>
+
+    <!-- Right: Theme + Lang -->
+    <div class="flex items-center gap-2">
+      <!-- Language Switch -->
+      <a
+        href={targetPath}
+        class="rounded-lg px-2.5 py-2 text-xs font-semibold text-secondary hover:text-primary hover:bg-card-hover transition-colors uppercase tracking-wide"
+        aria-label={t.lang.label}
+        title={t.lang.label}
+      >
+        <svg class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        {oppositeLang === 'zh' ? '中文' : 'EN'}
+      </a>
+
+      <!-- Theme Toggle -->
+      <button
+        id="theme-toggle"
+        class="rounded-lg p-2 text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+        aria-label={t.theme.dark}
+        title={t.theme.dark}
+        type="button"
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg class="dark-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg class="light-icon hidden w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="rounded-lg p-2 text-secondary hover:text-primary hover:bg-card-hover transition-colors sm:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+        type="button"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M3 5h14M3 10h14M3 15h14" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-theme sm:hidden"
+    role="region"
+    aria-label="Mobile navigation"
+  >
+    <nav class="flex flex-col px-4 py-3 gap-1">
+      <a href={lang === 'zh' ? '/' : '/en/'}
+         class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors">
+        {t.home}
+      </a>
+      <a href={lang === 'zh' ? '/works/' : '/en/works/'}
+         class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors">
+        {t.nav.works}
+      </a>
+      <a href={lang === 'zh' ? '/blog/' : '/en/blog/'}
+         class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors">
+        {t.nav.blog}
+      </a>
+      <a href={lang === 'zh' ? '/milestones/' : '/en/milestones/'}
+         class="rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors">
+        {t.nav.milestones}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- Theme & Mobile Menu: vanilla JS, zero React runtime -->
+<script>
+  function setupHeader() {
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('theme-toggle');
+    const darkIcon = document.querySelector('.dark-icon') as HTMLElement;
+    const lightIcon = document.querySelector('.light-icon') as HTMLElement;
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // --- Theme toggle ---
+    function updateToggleUI() {
+      const isDark = html.classList.contains('dark');
+      if (darkIcon && lightIcon) {
+        darkIcon.classList.toggle('hidden', !isDark);
+        lightIcon.classList.toggle('hidden', isDark);
+      }
+    }
+    updateToggleUI();
+
+    toggleBtn?.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      html.classList.toggle('dark', !isDark);
+      html.classList.toggle('light', isDark);
+      try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch (e) {}
+      updateToggleUI();
+      // Sync Giscus iframe if present
+      const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement | null;
+      if (iframe?.contentWindow) {
+        const theme = isDark ? 'light' : 'dark';
+        iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+      }
+    });
+
+    // --- Mobile menu ---
+    let menuOpen = false;
+
+    function openMenu() {
+      menuOpen = true;
+      mobileMenu?.classList.remove('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'true');
+      menuBtn?.setAttribute('aria-label', 'Close menu');
+    }
+
+    function closeMenu() {
+      menuOpen = false;
+      mobileMenu?.classList.add('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'false');
+      menuBtn?.setAttribute('aria-label', 'Open menu');
+    }
+
+    menuBtn?.addEventListener('click', () => {
+      menuOpen ? closeMenu() : openMenu();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuOpen) {
+        closeMenu();
+        menuBtn?.focus();
+      }
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!menuOpen) return;
+      const target = e.target as Node;
+      if (!menuBtn?.contains(target) && !mobileMenu?.contains(target)) {
+        closeMenu();
+      }
+    });
+  }
+
+  setupHeader();
+
+  // Re-setup after Astro View Transitions page swap
+  document.addEventListener('astro:after-swap', () => {
+    // Re-sync theme class after page swap
+    const stored = (() => { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+    const theme = stored || 'dark';
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light');
+    setupHeader();
+  });
+</script>

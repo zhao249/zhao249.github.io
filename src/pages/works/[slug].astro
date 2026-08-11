@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagBadge from '../../components/shared/TagBadge.astro';
+
+export async function getStaticPaths() {
+  const allProjects = Object.values(import.meta.glob('../../content/projects/*.zh.md', { eager: true }));
+  return allProjects.map((p) => ({
+    params: { slug: p.frontmatter.urlSlug },
+    props: { entry: p, allProjects },
+  }));
+}
+
+const { entry, allProjects } = Astro.props;
+const { frontmatter } = entry;
+const { Content } = entry;
+
+const lang = 'zh';
+
+// Previous / next navigation
+const sorted = allProjects
+  .map((p: any) => p.frontmatter)
+  .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+const currentIndex = sorted.findIndex((p: any) => p.urlSlug === frontmatter.urlSlug);
+const prevProject = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+const nextProject = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+---
+
+<BaseLayout lang={lang} title={frontmatter.title} description={frontmatter.tagline}>
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 py-12">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-primary mb-3">{frontmatter.title}</h1>
+      <p class="text-lg text-secondary mb-4">{frontmatter.tagline}</p>
+
+      <div class="flex flex-wrap items-center gap-3">
+        {frontmatter.tags?.map((tag: string) => <TagBadge label={tag} />)}
+        <span class="text-sm text-secondary">
+          {new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(frontmatter.date))}
+        </span>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        {frontmatter.github && (
+          <a href={frontmatter.github} target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 rounded-lg border border-theme px-4 py-2 text-sm font-medium text-primary hover:bg-card-hover transition-colors">
+            🔗 GitHub
+          </a>
+        )}
+        {frontmatter.demo && (
+          <a href={frontmatter.demo} target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent-1)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+            🌐 Demo
+          </a>
+        )}
+      </div>
+    </header>
+
+    {frontmatter.image && (
+      <img src={frontmatter.image} alt={frontmatter.imageAlt ?? frontmatter.title}
+           class="w-full rounded-xl border border-theme mb-8" loading="lazy" />
+    )}
+
+    <div class="prose prose-invert max-w-none
+      prose-headings:text-primary prose-p:text-secondary prose-a:text-[var(--accent-1)]
+      prose-strong:text-primary prose-code:text-[var(--accent-2)] prose-code:bg-card prose-code:rounded prose-code:px-1
+      prose-li:text-secondary
+    ">
+      <Content />
+    </div>
+
+    <nav class="mt-12 flex justify-between items-center border-t border-theme pt-6">
+      {prevProject ? (
+        <a href={`/works/${prevProject.urlSlug}/`} class="text-sm text-secondary hover:text-primary transition-colors">
+          ← {prevProject.title}
+        </a>
+      ) : <span />}
+      {nextProject ? (
+        <a href={`/works/${nextProject.urlSlug}/`} class="text-sm text-secondary hover:text-primary transition-colors">
+          {nextProject.title} →
+        </a>
+      ) : <span />}
+    </nav>
+  </article>
+</BaseLayout>

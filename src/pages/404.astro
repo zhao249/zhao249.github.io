@@ -1,0 +1,55 @@
+---
+import { UI } from '../i18n/ui';
+
+const url = Astro.url;
+const lang = url.pathname.startsWith('/en') ? 'en' : 'zh';
+const t = UI[lang];
+const homePath = lang === 'zh' ? '/' : '/en/';
+---
+
+<html lang={lang} class="dark">
+  <head>
+    <script is:inline>
+      (function() {
+        var theme = 'dark';
+        try { var stored = localStorage.getItem('theme'); if (stored) theme = stored; } catch(e) {}
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light');
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.notFound.title} — ZHAO</title>
+    <style>
+      :root, .dark {
+        --bg-base: #0a0a0f; --bg-card: #141418; --text-primary: #f4f4f6;
+        --text-secondary: #9ca3af; --border: #2a2a35; --accent-1: #8b5cf6;
+      }
+      .light {
+        --bg-base: #fafafa; --bg-card: #ffffff; --text-primary: #171717;
+        --text-secondary: #737373; --border: #e5e5e5;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: var(--bg-base); color: var(--text-primary);
+        font-family: system-ui, sans-serif; display: flex;
+        align-items: center; justify-content: center; min-height: 100vh;
+      }
+      .container { text-align: center; padding: 2rem; }
+      h1 { font-size: 5rem; font-weight: 800; color: var(--accent-1); }
+      p { color: var(--text-secondary); margin: 1rem 0 2rem; font-size: 1.1rem; }
+      a {
+        display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.75rem;
+        background: var(--accent-1); color: white; text-decoration: none;
+        font-weight: 600; transition: opacity 0.2s;
+      }
+      a:hover { opacity: 0.9; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>404</h1>
+      <p>{t.notFound.description}</p>
+      <a href={homePath}>{t.notFound.backHome}</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { UI } from '../../i18n/ui';
+import TagBadge from '../../components/shared/TagBadge.astro';
+
+const lang = 'zh';
+const t = UI[lang];
+
+// Astro.glob loads markdown files with frontmatter + Content
+const allProjects = Object.values(import.meta.glob('../../content/projects/*.zh.md', { eager: true }));
+const projects = allProjects
+  .map((p) => p.frontmatter)
+  .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<BaseLayout lang={lang} title={t.nav.works}>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-12">
+    <h1 class="text-3xl font-bold text-primary mb-2">🚀 {t.nav.works}</h1>
+    <p class="text-secondary mb-8">我做过的一些项目</p>
+
+    {projects.length === 0 ? (
+      <p class="text-secondary">暂无作品</p>
+    ) : (
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p: any) => (
+          <a
+            href={`/works/${p.urlSlug}/`}
+            class="group block rounded-2xl border border-theme bg-card hover:bg-card-hover hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+          >
+            {p.image && (
+              <img src={p.image} alt={p.imageAlt ?? p.title} class="w-full h-40 object-cover" loading="lazy" />
+            )}
+            <div class="p-5">
+              <h3 class="font-semibold text-primary group-hover:text-[var(--accent-1)] transition-colors">
+                {p.title}
+              </h3>
+              <p class="text-sm text-secondary mt-1 line-clamp-2">{p.tagline}</p>
+              <div class="flex flex-wrap gap-1 mt-3">
+                {p.tags?.map((tag: string) => <TagBadge label={tag} />)}
+              </div>
+              <p class="text-xs text-secondary mt-3">
+                {new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long' }).format(new Date(p.date))}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

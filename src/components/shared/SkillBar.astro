@@ -1,0 +1,43 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+import type { SkillItem } from '../../content/site-config';
+
+interface Props {
+  lang: Lang;
+  skill: SkillItem;
+}
+
+const levelLabels: Record<string, Record<string, string>> = {
+  zh: { mastered: '精通', proficient: '熟练', working: '使用中', learning: '学习中' },
+  en: { mastered: 'Mastered', proficient: 'Proficient', working: 'Working', learning: 'Learning' },
+};
+
+const levelBars: Record<string, string> = {
+  mastered: 'w-full',
+  proficient: 'w-3/4',
+  working: 'w-1/2',
+  learning: 'w-1/4',
+};
+
+const { lang, skill } = Astro.props;
+const label = levelLabels[lang][skill.level];
+const barWidth = levelBars[skill.level];
+const isLearning = skill.level === 'learning';
+---
+
+<div class="flex items-center justify-between gap-3">
+  <span class="text-sm text-primary min-w-0 truncate">{skill.name}</span>
+  <span class="text-xs text-secondary shrink-0">{label}</span>
+</div>
+<div class="mt-1 h-1.5 rounded-full bg-[var(--border)] overflow-hidden">
+  <div
+    class:list={[
+      'h-full rounded-full transition-all duration-500',
+      isLearning ? 'border border-dashed border-[var(--accent-2)] bg-transparent' : '',
+      !isLearning && skill.level === 'mastered' ? 'bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)]' : '',
+      !isLearning && skill.level === 'proficient' ? 'bg-[var(--accent-1)]' : '',
+      !isLearning && skill.level === 'working' ? 'bg-[var(--accent-1)] opacity-60' : '',
+      barWidth,
+    ]}
+  ></div>
+</div>

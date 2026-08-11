@@ -1,0 +1,44 @@
+---
+import { UI } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Timeline from '../../../components/shared/Timeline.astro';
+
+const lang = 'en';
+const t = UI[lang];
+
+import milestonesData from '../../../content/milestones/milestones.json';
+import accomplishmentsData from '../../../content/accomplishments.json';
+---
+
+<BaseLayout lang={lang} title={t.nav.milestones}>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 py-12">
+    <h1 class="text-3xl font-bold text-primary mb-2">🏆 {t.nav.milestones}</h1>
+    <p class="text-secondary mb-10">My timeline — where I started and where I'm headed</p>
+
+    <Timeline lang={lang} milestones={milestonesData.milestones} />
+
+    {accomplishmentsData.accomplishments.length > 0 && (
+      <div class="mt-16 border-t border-theme pt-10">
+        <h2 class="text-2xl font-bold text-primary mb-6">Achievements & Certifications</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {accomplishmentsData.accomplishments.map((a) => (
+            <div class="rounded-xl border border-theme bg-card p-5 hover:bg-card-hover transition-colors">
+              <h4 class="font-semibold text-primary text-sm">
+                {a.url ? (
+                  <a href={a.url} target="_blank" rel="noopener" class="hover:text-[var(--accent-1)] transition-colors">
+                    {lang === 'zh' ? a.zh.title : a.en.title}
+                  </a>
+                ) : (
+                  lang === 'zh' ? a.zh.title : a.en.title
+                )}
+              </h4>
+              <p class="text-xs text-secondary mt-1">
+                {(lang === 'zh' ? a.zh.org : a.en.org)} &middot; {a.date}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout>

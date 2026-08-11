@@ -1,0 +1,61 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const t = UI[lang];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-theme mt-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+    <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+      <!-- Social Links -->
+      <div class="flex items-center gap-5">
+        <a
+          href="https://github.com/zhao249"
+          target="_blank"
+          rel="noopener noreferrer me"
+          class="text-secondary hover:text-primary transition-colors text-sm"
+          aria-label="GitHub"
+        >
+          GitHub
+        </a>
+        <a
+          href="https://linkedin.com/in/yourname"
+          target="_blank"
+          rel="noopener noreferrer me"
+          class="text-secondary hover:text-primary transition-colors text-sm"
+          aria-label="LinkedIn"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://x.com/yourhandle"
+          target="_blank"
+          rel="noopener noreferrer me"
+          class="text-secondary hover:text-primary transition-colors text-sm"
+          aria-label="Twitter / X"
+        >
+          X / Twitter
+        </a>
+        <a
+          href="mailto:hello@zhao249.me"
+          class="text-secondary hover:text-primary transition-colors text-sm"
+          aria-label="Email"
+        >
+          Email
+        </a>
+      </div>
+
+      <!-- Copyright -->
+      <p class="text-secondary text-sm">
+        &copy; {year} ZHAO &middot; {t.footer.builtWith} &middot; {t.footer.rights}
+      </p>
+    </div>
+  </div>
+</footer>

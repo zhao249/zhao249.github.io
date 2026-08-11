@@ -1,0 +1,65 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Milestone {
+  date: string;
+  type: string;
+  zh: { title: string; story: string };
+  en: { title: string; story: string };
+  icon?: string;
+}
+
+interface Props {
+  lang: Lang;
+  milestones: Milestone[];
+}
+
+const typeConfig: Record<string, { border: string; dot: string }> = {
+  career:     { border: 'border-l-[var(--accent-1)]', dot: 'bg-[var(--accent-1)]' },
+  learning:   { border: 'border-l-[var(--accent-2)]', dot: 'bg-[var(--accent-2)]' },
+  opensource: { border: 'border-l-[var(--accent-3)]', dot: 'bg-[var(--accent-3)]' },
+  life:       { border: 'border-l-[#22c55e]', dot: 'bg-[#22c55e]' },
+  award:      { border: 'border-l-[#eab308]', dot: 'bg-[#eab308]' },
+};
+
+const { lang, milestones } = Astro.props;
+
+function formatDateYM(date: string, lang: Lang): string {
+  const parts = date.split('-');
+  if (parts.length < 2) return date;
+  const y = parseInt(parts[0]), m = parseInt(parts[1]);
+  if (lang === 'zh') return `${y}年${m}月`;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[m-1] ?? m} ${y}`;
+}
+
+const sorted = [...milestones].sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<div class="relative">
+  {sorted.map((m, i) => {
+    const cfg = typeConfig[m.type] ?? typeConfig.career;
+    return (
+      <div class="relative pl-8 pb-6 last:pb-0">
+        {/* Vertical line */}
+        <div class={`absolute left-[11px] top-3 bottom-0 w-px border-l border-dashed ${cfg.border} ${i === sorted.length - 1 ? 'h-0' : ''}`}></div>
+
+        {/* Dot */}
+        <div class={`absolute left-[3px] top-1.5 h-4 w-4 rounded-full ${cfg.dot} flex items-center justify-center text-[10px] leading-none`}>
+          {m.icon ?? ''}
+        </div>
+
+        {/* Content */}
+        <div class="min-w-0">
+          <p class="text-xs text-secondary font-mono">{formatDateYM(m.date, lang)}</p>
+          <h4 class="text-base font-semibold text-primary mt-1">
+            {lang === 'zh' ? m.zh.title : m.en.title}
+          </h4>
+          <p class="text-sm text-secondary mt-1 leading-relaxed">
+            {lang === 'zh' ? m.zh.story : m.en.story}
+          </p>
+        </div>
+      </div>
+    );
+  })}
+</div>

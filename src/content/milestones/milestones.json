@@ -1,0 +1,32 @@
+{
+  "milestones": [
+    {
+      "date": "2026-08-10",
+      "type": "opensource",
+      "zh": { "title": "发布个人品牌站 v1.0", "story": "从零搭建 Astro 静态站点，经过 4 个 Phase 逐步实现 Bento Grid、双语支持、博客模块、Giscus 评论，完整可上线。" },
+      "en": { "title": "Launched Personal Branding Hub v1.0", "story": "Built from scratch with Astro. Achieved Bento Grid layout, bilingual support, blog module, and Giscus comments across 4 development phases." },
+      "icon": "🌟"
+    },
+    {
+      "date": "2026-06",
+      "type": "learning",
+      "zh": { "title": "深入学习 Astro 5 静态站点架构", "story": "研究 Island Architecture、View Transitions API、Content Collections 与 import.meta.glob 的取舍。产出为一篇博客文章和本项目的技术选型决策。" },
+      "en": { "title": "Deep dive into Astro 5 static site architecture", "story": "Studied Island Architecture, View Transitions API, and the tradeoffs between Content Collections and import.meta.glob. Produced a blog post and informed this project's tech decisions." },
+      "icon": "📚"
+    },
+    {
+      "date": "2025-12",
+      "type": "career",
+      "zh": { "title": "开始规划个人品牌展示方案", "story": "调研 Hugo Blox、Next.js、Astro 等多个候选方案，最终锁定 Astro 静态站 + GitHub Pages 零成本部署路线。" },
+      "en": { "title": "Started planning personal branding solution", "story": "Researched Hugo Blox, Next.js, Astro, and other candidates. Finalized on Astro static site + GitHub Pages for zero-cost deployment." },
+      "icon": "💼"
+    },
+    {
+      "date": "2025-06",
+      "type": "opensource",
+      "zh": { "title": "第一个开源项目贡献", "story": "开始参与开源社区，并产生了建立个人品牌、让优秀同行发现自己这个想法。" },
+      "en": { "title": "First open source contribution", "story": "Started contributing to open source. This sparked the idea of building a personal brand to connect with like-minded developers." },
+      "icon": "🌐"
+    }
+  ]
+}

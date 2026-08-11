@@ -1,0 +1,72 @@
+---
+import { UI, type Lang } from '../i18n/ui';
+import { generateSEOMeta } from '../utils/seo';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  /** hreflang alternates: locale → full URL. Omit locales without translation. */
+  alternates?: Record<string, string>;
+}
+
+const { lang } = Astro.props;
+
+const t = UI[lang];
+const siteTitle = t.siteTitle;
+const siteDescription = t.siteDescription;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://zhao249.github.io').href;
+const seoTitle = Astro.props.title ? `${Astro.props.title} — ZHAO` : siteTitle;
+const seoDescription = Astro.props.description ?? siteDescription;
+
+const seo = generateSEOMeta({
+  lang,
+  title: seoTitle,
+  description: seoDescription,
+  canonicalUrl: canonical,
+  ogImage: Astro.props.ogImage,
+  alternates: Astro.props.alternates,
+});
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="dark">
+  <head>
+    <!-- Anti-FOUC: must run BEFORE any CSS -->
+    <script is:inline>
+      (function() {
+        var theme = 'dark';
+        try { var stored = localStorage.getItem('theme'); if (stored) theme = stored; } catch(e) {}
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light');
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{seo.title}</title>
+    {seo.meta.map((m) => <meta {...m} />)}
+    {seo.link.map((l) => <link {...l} />)}
+  </head>
+  <body class="bg-base text-primary antialiased min-h-screen flex flex-col">
+    <Header lang={lang} currentPath={Astro.url.pathname} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <ClientRouter />
+    <!-- astro:after-swap theme re-sync -->
+    <script>
+      document.addEventListener('astro:after-swap', () => {
+        var stored = (function() { try { return localStorage.getItem('theme'); } catch(e) { return null; } })();
+        var theme = stored || 'dark';
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light');
+      });
+    </script>
+  </body>
+</html>

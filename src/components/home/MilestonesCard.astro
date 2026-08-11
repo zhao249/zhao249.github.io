@@ -1,0 +1,63 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+import BentoCard from '../shared/BentoCard.astro';
+
+interface Milestone {
+  date: string;
+  type: string;
+  title: string;
+}
+
+interface Props {
+  lang: Lang;
+  milestones: Milestone[];
+}
+
+const typeColors: Record<string, string> = {
+  career: 'var(--accent-1)',
+  learning: 'var(--accent-2)',
+  opensource: 'var(--accent-3)',
+  life: '#22c55e',
+  award: '#eab308',
+};
+
+const { lang, milestones } = Astro.props;
+const t = UI[lang];
+const milestonesPath = lang === 'zh' ? '/milestones/' : '/en/milestones/';
+---
+
+<BentoCard lang={lang} title={lang === 'zh' ? '近期里程碑' : 'Recent Milestones'} icon="🏆" class="!p-0">
+  <div class="p-5 sm:p-6 space-y-0">
+    {milestones.length === 0 ? (
+      <p class="text-secondary text-sm">{lang === 'zh' ? '里程碑即将上线' : 'Milestones coming soon'}</p>
+    ) : (
+      <div class="relative">
+        {milestones.slice(0, 4).map((m, i) => (
+          <div class="flex gap-3 pb-3 last:pb-0">
+            {/* Timeline dot + line */}
+            <div class="relative flex flex-col items-center">
+              <div
+                class="mt-1 h-2.5 w-2.5 rounded-full shrink-0"
+                style="background-color: {typeColors[m.type] ?? 'var(--border)'}"
+              ></div>
+              {i < milestones.slice(0, 4).length - 1 && (
+                <div class="w-px flex-1 bg-[var(--border)] mt-1"></div>
+              )}
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-secondary font-mono">{m.date}</p>
+              <p class="text-sm text-primary mt-0.5 line-clamp-2">{m.title}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <a
+      href={milestonesPath}
+      class="inline-flex items-center gap-1 text-sm font-medium text-[var(--accent-1)] hover:underline mt-3"
+    >
+      {t.viewAll}
+    </a>
+  </div>
+</BentoCard>

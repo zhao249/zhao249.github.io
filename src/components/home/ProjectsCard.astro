@@ -1,0 +1,60 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+import BentoCard from '../shared/BentoCard.astro';
+import TagBadge from '../shared/TagBadge.astro';
+
+interface Project {
+  title: string;
+  tagline: string;
+  slug: string;
+  tags: string[];
+  date: Date;
+  image?: string;
+}
+
+interface Props {
+  lang: Lang;
+  projects: Project[];
+}
+
+const { lang, projects } = Astro.props;
+const t = UI[lang];
+const worksPath = lang === 'zh' ? '/works/' : '/en/works/';
+---
+
+<BentoCard lang={lang} title={lang === 'zh' ? '核心项目' : 'Featured Projects'} icon="🚀" class="!p-0">
+  <div class="p-5 sm:p-6 space-y-4">
+    {projects.slice(0, 2).length === 0 ? (
+      <p class="text-secondary text-sm">{lang === 'zh' ? '项目即将上线' : 'Projects coming soon'}</p>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {projects.slice(0, 2).map((p) => (
+          <a
+            href={`${worksPath}${p.slug}/`}
+            class="group/card block rounded-xl border border-theme bg-card-hover/50 hover:bg-card-hover transition-colors overflow-hidden"
+          >
+            {p.image && (
+              <img src={p.image} alt={p.title} class="w-full h-32 object-cover" loading="lazy" />
+            )}
+            <div class="p-4">
+              <h4 class="font-semibold text-sm text-primary group-hover/card:text-[var(--accent-1)] transition-colors">
+                {p.title}
+              </h4>
+              <p class="text-xs text-secondary mt-1 line-clamp-2">{p.tagline}</p>
+              <div class="flex flex-wrap gap-1 mt-2">
+                {p.tags.map((tag: string) => <TagBadge label={tag} />)}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <a
+      href={worksPath}
+      class="inline-flex items-center gap-1 text-sm font-medium text-[var(--accent-1)] hover:underline"
+    >
+      {t.viewAll}
+    </a>
+  </div>
+</BentoCard>

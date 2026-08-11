@@ -1,0 +1,16 @@
+{
+  "accomplishments": [
+    {
+      "date": "2026",
+      "zh": { "title": "个人品牌展示站", "org": "独立项目" },
+      "en": { "title": "Personal Branding Hub", "org": "Independent Project" },
+      "url": "https://zhao249.github.io"
+    },
+    {
+      "date": "2025",
+      "zh": { "title": "开源项目贡献者", "org": "GitHub" },
+      "en": { "title": "Open Source Contributor", "org": "GitHub" },
+      "url": "https://github.com/zhao249"
+    }
+  ]
+}

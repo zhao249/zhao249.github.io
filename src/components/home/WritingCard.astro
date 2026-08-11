@@ -1,0 +1,58 @@
+---
+import { UI, type Lang } from '../../i18n/ui';
+import BentoCard from '../shared/BentoCard.astro';
+
+interface Post {
+  title: string;
+  slug: string;
+  published: Date;
+}
+
+interface Props {
+  lang: Lang;
+  posts: Post[];
+}
+
+const { lang, posts } = Astro.props;
+const t = UI[lang];
+const blogPath = lang === 'zh' ? '/blog/' : '/en/blog/';
+
+const formatDate = (date: Date): string => {
+  try {
+    return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
+      year: 'numeric',
+      month: lang === 'zh' ? 'long' : 'short',
+      day: 'numeric',
+    }).format(date);
+  } catch {
+    return String(date);
+  }
+};
+---
+
+<BentoCard lang={lang} title={lang === 'zh' ? '最新思考' : 'Latest Writing'} icon="📝" class="!p-0">
+  <div class="p-5 sm:p-6 space-y-3">
+    {posts.length === 0 ? (
+      <p class="text-secondary text-sm">{lang === 'zh' ? '文章即将发布' : 'Posts coming soon'}</p>
+    ) : (
+      posts.slice(0, 3).map((p) => (
+        <a
+          href={`${blogPath}${p.slug}/`}
+          class="block group/item"
+        >
+          <p class="text-sm text-primary font-medium group-hover/item:text-[var(--accent-1)] transition-colors line-clamp-2">
+            {p.title}
+          </p>
+          <p class="text-xs text-secondary mt-0.5">{formatDate(p.published, lang)}</p>
+        </a>
+      ))
+    )}
+
+    <a
+      href={blogPath}
+      class="inline-flex items-center gap-1 text-sm font-medium text-[var(--accent-1)] hover:underline"
+    >
+      {t.viewAll}
+    </a>
+  </div>
+</BentoCard>

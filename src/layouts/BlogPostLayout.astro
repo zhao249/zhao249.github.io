@@ -1,0 +1,91 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TagBadge from '../components/shared/TagBadge.astro';
+import GiscusComments from '../components/Giscus.tsx';
+import { getReadingTime } from '../utils/reading-time';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  frontmatter: Record<string, any>;
+  rawBody: string;
+  allPosts: Array<{
+    slug: string;
+    frontmatter: Record<string, any>;
+  }>;
+}
+
+const { lang, title, frontmatter, rawBody, allPosts } = Astro.props;
+const blogPath = lang === 'zh' ? '/blog/' : '/en/blog/';
+const readingMins = getReadingTime(rawBody, lang);
+const readingLabel = lang === 'zh' ? `${readingMins} 分钟` : `${readingMins} min read`;
+
+const dateStr = (() => {
+  try {
+    return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(new Date(frontmatter.published));
+  } catch { return String(frontmatter.published); }
+})();
+
+// Related posts: same tags first, then by date. Exclude self. Max 3.
+const related = allPosts
+  .filter((p) => p.slug !== frontmatter.slug)
+  .map((p) => {
+    const sharedTags = (frontmatter.tags || []).filter((t: string) =>
+      (p.frontmatter.tags || []).includes(t)
+    );
+    return { ...p, sharedTags: sharedTags.length };
+  })
+  .sort((a, b) => b.sharedTags - a.sharedTags || new Date(b.frontmatter.published).getTime() - new Date(a.frontmatter.published).getTime())
+  .slice(0, 3);
+
+const theme = 'dark';
+---
+
+<BaseLayout lang={lang} title={title} description={frontmatter.description}>
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 py-12">
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-primary mb-4">{title}</h1>
+      <div class="flex flex-wrap items-center gap-3 text-sm text-secondary mb-4">
+        <time datetime={String(frontmatter.published)}>{dateStr}</time>
+        <span>&middot;</span>
+        <span>{readingLabel}</span>
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        {frontmatter.tags?.map((tag: string) => <TagBadge label={tag} />)}
+      </div>
+    </header>
+
+    <div class="prose prose-invert max-w-none
+      prose-headings:text-primary prose-p:text-secondary prose-a:text-[var(--accent-1)]
+      prose-strong:text-primary prose-code:text-[var(--accent-2)] prose-code:bg-card prose-code:rounded prose-code:px-1
+      prose-li:text-secondary prose-blockquote:border-[var(--accent-1)] prose-blockquote:text-secondary
+    ">
+      <slot />
+    </div>
+
+    <!-- Related posts -->
+    {related.length > 0 && (
+      <div class="mt-12 border-t border-theme pt-8">
+        <h3 class="text-lg font-semibold text-primary mb-4">
+          {lang === 'zh' ? '相关阅读' : 'Related Reading'}
+        </h3>
+        <div class="flex flex-col gap-2">
+          {related.map((p) => (
+            <a href={`${blogPath}${p.slug}/`}
+               class="text-sm text-secondary hover:text-[var(--accent-1)] transition-colors">
+              {p.frontmatter.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Giscus Comments (client:load = React island, only this page) -->
+    <GiscusComments theme={theme} client:load />
+  </article>
+</BaseLayout>

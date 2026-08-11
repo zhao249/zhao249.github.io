@@ -1,0 +1,29 @@
+---
+import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = Object.values(import.meta.glob('../../../content/blog/*.en.md', { eager: true })) as any[];
+  return allPosts
+    .filter((p) => !p.frontmatter.draft)
+    .map((p) => ({
+      params: { slug: p.frontmatter.slug },
+      props: { entry: p, allPosts },
+    }));
+}
+
+const { entry, allPosts } = Astro.props;
+const { frontmatter, rawContent } = entry as { frontmatter: any; rawContent: () => string };
+const { Content } = entry;
+
+const lang = 'en';
+---
+
+<BlogPostLayout
+  lang={lang}
+  title={frontmatter.title}
+  frontmatter={frontmatter}
+  rawBody={rawContent()}
+  allPosts={allPosts.map((p: any) => ({ slug: p.frontmatter.slug, frontmatter: p.frontmatter }))}
+>
+  <Content />
+</BlogPostLayout>
