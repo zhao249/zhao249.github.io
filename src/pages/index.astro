@@ -13,68 +13,35 @@ const allProjects = Object.values(import.meta.glob('../content/projects/*.zh.md'
 const zhProjects = allProjects
   .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .map((p: any) => ({
-    title: p.frontmatter.title,
-    tagline: p.frontmatter.tagline,
-    slug: p.frontmatter.urlSlug,
-    tags: p.frontmatter.tags || [],
-    date: new Date(p.frontmatter.date),
-    image: p.frontmatter.image,
+    title: p.frontmatter.title, tagline: p.frontmatter.tagline,
+    slug: p.frontmatter.urlSlug, tags: p.frontmatter.tags || [],
+    date: new Date(p.frontmatter.date), image: p.frontmatter.image,
   }));
 
 const allPosts = Object.values(import.meta.glob('../content/blog/*.zh.md', { eager: true })) as any[];
 const posts = allPosts
   .filter((p: any) => !p.frontmatter.draft)
   .sort((a: any, b: any) => new Date(b.frontmatter.published).getTime() - new Date(a.frontmatter.published).getTime())
-  .map((p: any) => ({
-    title: p.frontmatter.title,
-    slug: p.frontmatter.slug,
-    published: new Date(p.frontmatter.published),
-  }));
+  .map((p: any) => ({ title: p.frontmatter.title, slug: p.frontmatter.slug, published: new Date(p.frontmatter.published) }));
 
 const milestones = milestonesData.milestones.slice(0, 4).map((m) => ({
-  date: m.date,
-  type: m.type,
-  title: m.zh.title,
+  date: m.date, type: m.type, title: m.zh.title,
 }));
 ---
 
 <BaseLayout lang={lang}>
-  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
-    <div
-      class="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-6"
-      style="grid-auto-rows: minmax(100px, auto);"
-    >
-      <div class="md:col-span-3 lg:col-span-3 lg:row-span-2">
-        <HeroCard lang={lang} />
-      </div>
-      <div class="md:col-span-3 lg:col-span-3 lg:row-span-2">
-        <SkillsCard lang={lang} />
-      </div>
-      <div class="md:col-span-3 lg:col-span-6">
-        <ProjectsCard lang={lang} projects={zhProjects} />
-      </div>
-      <div class="md:col-span-3 lg:col-span-3">
-        <MilestonesCard lang={lang} milestones={milestones} />
-      </div>
-      <div class="md:col-span-3 lg:col-span-3">
-        <WritingCard lang={lang} posts={posts} />
-      </div>
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 py-10 sm:py-16">
+    <!-- Hero — full width -->
+    <div class="mb-10 sm:mb-14">
+      <HeroCard lang={lang} />
+    </div>
+
+    <!-- 2x2 Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+      <ProjectsCard lang={lang} projects={zhProjects} />
+      <WritingCard lang={lang} posts={posts} />
+      <SkillsCard lang={lang} />
+      <MilestonesCard lang={lang} milestones={milestones} />
     </div>
   </div>
 </BaseLayout>
-
-<style>
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .grid > * { animation: fadeInUp 400ms ease-out both; }
-  .grid > *:nth-child(1) { animation-delay: 0ms; }
-  .grid > *:nth-child(2) { animation-delay: 80ms; }
-  .grid > *:nth-child(3) { animation-delay: 160ms; }
-  .grid > *:nth-child(4) { animation-delay: 240ms; }
-  .grid > *:nth-child(5) { animation-delay: 320ms; }
-  @media (prefers-reduced-motion: reduce) {
-    .grid > * { animation: none; }
-  }
-</style>

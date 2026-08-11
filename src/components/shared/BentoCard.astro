@@ -1,17 +1,12 @@
 ---
-import { UI, type Lang } from '../../i18n/ui';
-
 interface Props {
-  lang: Lang;
-  title: string;
+  title?: string;
   icon?: string;
   href?: string;
   class?: string;
 }
 
-const { lang, title, icon, href = '', class: extraClass = '' } = Astro.props;
-
-const t = UI[lang];
+const { title, icon, href = '', class: extraClass = '' } = Astro.props;
 const isLink = href.length > 0;
 const Tag = isLink ? 'a' : 'div';
 ---
@@ -19,24 +14,13 @@ const Tag = isLink ? 'a' : 'div';
 <Tag
   href={isLink ? href : undefined}
   class:list={[
-    'group relative block overflow-hidden rounded-2xl border border-theme bg-card p-5 sm:p-6',
-    'transition-all duration-200 ease-out',
-    isLink ? 'cursor-pointer hover:-translate-y-0.5 hover:bg-card-hover' : '',
+    'group relative block rounded-xl border border-theme bg-card p-6',
+    'transition-[background-color,transform] duration-150 ease-out',
+    isLink ? 'cursor-pointer hover:bg-card-hover hover:-translate-y-px' : '',
     extraClass,
   ]}
 >
-  {/* Gradient border glow on hover */}
-  <div
-    class="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-    style="background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 50%, var(--accent-3) 100%); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; -webkit-mask-composite: xor; padding: 1px;"
-  >
-  </div>
-
-  <div class="relative z-10">
-    {icon && <span class="text-xl sm:text-2xl">{icon}</span>}
-    <h3 class="mt-2 text-base sm:text-lg font-semibold text-primary">{title}</h3>
-    <div class="mt-2 text-secondary text-sm sm:text-base">
-      <slot />
-    </div>
-  </div>
+  {icon && <span class="text-sm mb-3 block opacity-70">{icon}</span>}
+  {title && <h3 class="text-sm font-semibold text-primary mb-2 tracking-tight">{title}</h3>}
+  <slot />
 </Tag>

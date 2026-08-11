@@ -16,10 +16,10 @@ const isHome = currentPath === '/' || currentPath === '/en' || currentPath === '
 ---
 
 <header
-  class="sticky top-0 z-50 border-b border-theme bg-base-80 backdrop-blur-md"
+  class="sticky top-0 z-50 border-b border-theme bg-[var(--bg-base)]/80 backdrop-blur-lg"
   id="site-header"
 >
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+  <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
     <!-- Logo -->
     <a
       href={lang === 'zh' ? '/' : '/en/'}

@@ -5,28 +5,26 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* ===== Dark Mode (default) ===== */
+/* ===== Dark Mode (default) — Linear/GitHub-inspired ===== */
 :root,
 .dark {
-  --bg-base: #0a0a0f;
-  --bg-card: #141418;
-  --bg-card-hover: #1a1a20;
-  --text-primary: #f4f4f6;
-  --text-secondary: #9ca3af;
-  --border: #2a2a35;
-  --accent-1: #8b5cf6;
-  --accent-2: #ec4899;
-  --accent-3: #f97316;
+  --bg-base: #0d1117;
+  --bg-card: #161b22;
+  --bg-card-hover: #1c2129;
+  --text-primary: #e6edf3;
+  --text-secondary: #7d8590;
+  --border: #21262d;
+  --accent-1: #5e6ad2;
 }
 
 /* ===== Light Mode ===== */
 .light {
-  --bg-base: #fafafa;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f5f5f5;
-  --text-primary: #171717;
-  --text-secondary: #737373;
-  --border: #e5e5e5;
+  --bg-base: #ffffff;
+  --bg-card: #f6f8fa;
+  --bg-card-hover: #eef1f4;
+  --text-primary: #1f2328;
+  --text-secondary: #656d76;
+  --border: #d0d7de;
 }
 
 /* ===== Theme-aware utilities ===== */
@@ -55,7 +53,10 @@
 /* ===== Base styles ===== */
 html {
   scroll-behavior: smooth;
-  transition: color 200ms ease, background-color 200ms ease;
+  font-size: 15px;
+}
+@media (min-width: 768px) {
+  html { font-size: 16px; }
 }
 
 body {
@@ -64,50 +65,34 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+::selection {
+  background-color: var(--accent-1);
+  color: #fff;
 }
 
 /* ===== Focus styles (a11y) ===== */
 :focus-visible {
   outline: 2px solid var(--accent-1);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* ===== View Transitions ===== */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 200ms;
-}
-::view-transition-old(root) {
-  animation: fade-out 150ms ease-out;
-}
-::view-transition-new(root) {
-  animation: fade-in 150ms ease-in;
-}
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0.5; }
-}
-@keyframes fade-in {
-  from { opacity: 0.5; }
-  to { opacity: 1; }
+/* Links */
+a {
+  transition: color 150ms ease;
 }
 
-/* ===== Scroll-driven fade-in (progressive enhancement) ===== */
-@supports (animation-timeline: view()) {
-  .bento-card {
-    animation: reveal linear both;
-    animation-timeline: view();
-    animation-range: entry 5% cover 20%;
-  }
-  @keyframes reveal {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-}
+/* ===== View Transitions ===== */
+::view-transition-old(root) { animation: fade-out 150ms ease-out; }
+::view-transition-new(root) { animation: fade-in 150ms ease-in; }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0.3; } }
+@keyframes fade-in { from { opacity: 0.3; } to { opacity: 1; } }
 
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {

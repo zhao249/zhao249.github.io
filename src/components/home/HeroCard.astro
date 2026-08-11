@@ -1,7 +1,6 @@
 ---
 import { siteConfig } from '../../content/site-config';
 import { UI, type Lang } from '../../i18n/ui';
-import BentoCard from '../shared/BentoCard.astro';
 
 interface Props {
   lang: Lang;
@@ -12,51 +11,57 @@ const t = UI[lang];
 const tagline = siteConfig.tagline[lang];
 const bio = siteConfig.bio[lang];
 
-const socialIcons: Record<string, string> = {
-  github: '🔗',
-  linkedin: '💼',
-  twitter: '🐦',
-  email: '📧',
+const socialLabels: Record<string, string> = {
+  github: 'GitHub',
+  linkedin: 'LinkedIn',
+  twitter: 'X',
+  email: 'Email',
 };
 ---
 
-<BentoCard lang={lang} title={siteConfig.name} class="!p-0 overflow-visible">
-  <div class="flex flex-col items-start gap-4 p-5 sm:p-6">
-    <div class="flex items-center gap-4">
-      <img
-        src={siteConfig.avatar}
-        alt="Avatar"
-        class="h-16 w-16 rounded-full border-2 border-theme object-cover bg-card shrink-0"
-        width="64"
-        height="64"
-        loading="eager"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-      />
-      <div
-        class="h-16 w-16 rounded-full border-2 border-theme bg-card shrink-0 items-center justify-center hidden"
-      >
-        <span class="text-xl font-bold text-[var(--accent-1)]">{siteConfig.name[0]}</span>
-      </div>
-      <div class="min-w-0">
-        <p class="text-lg font-bold text-primary">{siteConfig.name}</p>
-        <p class="text-sm text-secondary mt-0.5">{tagline}</p>
-      </div>
-    </div>
-
-    <p class="text-sm text-secondary whitespace-pre-line leading-relaxed">{bio}</p>
-
-    <div class="flex flex-wrap gap-3">
-      {siteConfig.socials.map((s) => (
-        <a
-          href={s.url}
-          target="_blank"
-          rel="noopener noreferrer me"
-          class="rounded-lg border border-theme px-3 py-1.5 text-xs font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
-          aria-label={s.name}
-        >
-          {socialIcons[s.icon] ?? s.icon} {s.name}
-        </a>
-      ))}
-    </div>
+<div class="flex flex-col items-center text-center py-6 sm:py-8">
+  <!-- Avatar -->
+  <img
+    src={siteConfig.avatar}
+    alt="Avatar"
+    class="h-20 w-20 rounded-full border-2 border-theme object-cover bg-card shrink-0 mb-5"
+    width="80"
+    height="80"
+    loading="eager"
+    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+  />
+  <div class="h-20 w-20 rounded-full border-2 border-theme bg-card shrink-0 items-center justify-center hidden mb-5">
+    <span class="text-2xl font-semibold text-[var(--accent-1)]">{siteConfig.name[0]}</span>
   </div>
-</BentoCard>
+
+  <!-- Name & Tagline -->
+  <h1 class="text-2xl sm:text-3xl font-bold text-primary tracking-tight">
+    {siteConfig.name}
+  </h1>
+  <p class="text-sm text-secondary mt-2 max-w-md">{tagline}</p>
+  <p class="text-sm text-secondary mt-3 max-w-lg leading-relaxed whitespace-pre-line">{bio}</p>
+
+  <!-- CTA -->
+  <a
+    href={lang === 'zh' ? '/works/' : '/en/works/'}
+    class="inline-flex items-center gap-1.5 mt-5 rounded-lg bg-[var(--accent-1)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity duration-150"
+  >
+    {lang === 'zh' ? '查看作品' : 'View Works'}
+    <span aria-hidden="true">→</span>
+  </a>
+
+  <!-- Social links -->
+  <div class="flex flex-wrap justify-center gap-1 mt-5">
+    {siteConfig.socials.map((s) => (
+      <a
+        href={s.url}
+        target="_blank"
+        rel="noopener noreferrer me"
+        class="rounded-md px-3 py-1.5 text-xs font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors duration-150"
+        aria-label={s.name}
+      >
+        {socialLabels[s.icon] ?? s.name}
+      </a>
+    ))}
+  </div>
+</div>
